@@ -1,5 +1,6 @@
 package com.ahnis.servaia;
 
+import org.springframework.ai.autoconfigure.vectorstore.cassandra.CassandraVectorStoreAutoConfiguration;
 import org.springframework.ai.autoconfigure.vectorstore.milvus.MilvusVectorStoreAutoConfiguration;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -13,7 +14,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.TimeZone;
 
-@SpringBootApplication(exclude = MilvusVectorStoreAutoConfiguration.class)
+@SpringBootApplication(exclude = {MilvusVectorStoreAutoConfiguration.class, CassandraVectorStoreAutoConfiguration.class})
 @EnableAsync
 @EnableScheduling
 @EnableConfigurationProperties

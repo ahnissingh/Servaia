@@ -69,7 +69,7 @@ public class SecurityConfig {
 
     private CorsConfigurationSource customCorsConfigurationSource() {
         var config = new CorsConfiguration();
-        config.setAllowedOrigins(securityProperties.getAllowedOrigins());
+        config.setAllowedOrigins(List.of("http://10.10.195.61:5173"));
         config.setAllowedMethods(List.of("*"));
         config.setAllowedHeaders(List.of("*"));
         config.setExposedHeaders(List.of("Authorization"));

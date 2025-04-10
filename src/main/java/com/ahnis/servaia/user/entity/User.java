@@ -82,7 +82,6 @@ public class User implements UserDetails {
     private int longestStreak; // Longest streak achieved
     private Instant lastJournalEntryDate; // Date of the last journal entry
     @Indexed
-    @Field(targetType = FieldType.OBJECT_ID)
     private String therapistId;
     private Instant subscribedAt; // Track when subscription occurred
     //added these will only be viewed by therapists

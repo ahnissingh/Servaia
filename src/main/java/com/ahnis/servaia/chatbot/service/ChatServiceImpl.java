@@ -3,12 +3,13 @@ package com.ahnis.servaia.chatbot.service;
 import com.ahnis.servaia.chatbot.dto.ChatRequest;
 import com.ahnis.servaia.chatbot.dto.ChatResponse;
 import com.ahnis.servaia.chatbot.dto.ChatStreamRequest;
-import com.ahnis.servaia.chatbot.tools.ChatbotTools;
+import com.ahnis.servaia.chatbot.tools.ChatbotToolChain;
 import com.ahnis.servaia.user.entity.User;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.client.advisor.MessageChatMemoryAdvisor;
 import org.springframework.ai.chat.client.advisor.QuestionAnswerAdvisor;
 import org.springframework.ai.chat.memory.ChatMemory;
+import org.springframework.ai.chat.memory.cassandra.CassandraChatMemory;
 import org.springframework.ai.chat.prompt.Prompt;
 import org.springframework.ai.chat.prompt.PromptTemplate;
 import org.springframework.ai.vectorstore.SearchRequest;
@@ -47,7 +48,8 @@ import java.util.function.Consumer;
 @Service
 public class ChatServiceImpl implements ChatService {
     private final ChatClient chatClient;
-    private final VectorStore vectorStore;
+    //todo if required rag use vectorStore
+    //private final VectorStore vectorStore;
 
     @Value("classpath:/templates/chatbot/system-template.st")
     private Resource systemMessageResource;
@@ -62,13 +64,13 @@ public class ChatServiceImpl implements ChatService {
      * @param vectorStore The {@link VectorStore} used for long-term conversation memory.
      */
 
-    public ChatServiceImpl(ChatClient.Builder chatClient, ChatMemory chatMemory, VectorStore vectorStore, ChatbotTools chatbotTools) {
+    public ChatServiceImpl(ChatClient.Builder chatClient, CassandraChatMemory chatMemory, VectorStore vectorStore, ChatbotToolChain suicidePreventionToolsPhase1) {
         this.chatClient = chatClient.defaultAdvisors(List.of(
                         new MessageChatMemoryAdvisor(chatMemory)
                 ))
-                .defaultTools(chatbotTools)
+                .defaultTools(suicidePreventionToolsPhase1)
                 .build();
-        this.vectorStore = vectorStore;
+//        this.vectorStore = vectorStore;
     }
 
     /**
@@ -142,13 +144,13 @@ public class ChatServiceImpl implements ChatService {
      */
     private Consumer<ChatClient.AdvisorSpec> advisorSpecification(String userId, String message, String conversationId) {
         return advisorSpec -> advisorSpec
-                .advisors(new QuestionAnswerAdvisor(vectorStore, SearchRequest.builder()
-                        .filterExpression("userId == '" + userId + "'")
-                        .topK(3)
-                        .query(message)
-                        .build()))
+//                .advisors(new QuestionAnswerAdvisor(vectorStore, SearchRequest.builder()
+//                        .filterExpression("userId == '" + userId + "'")
+//                        .topK(3)
+//                        .query(message)
+//                        .build()))
                 .param(MessageChatMemoryAdvisor.CHAT_MEMORY_CONVERSATION_ID_KEY, conversationId)
-                .param(MessageChatMemoryAdvisor.CHAT_MEMORY_RETRIEVE_SIZE_KEY, 10);
+                .param(MessageChatMemoryAdvisor.CHAT_MEMORY_RETRIEVE_SIZE_KEY, 5);
 
     }
 

@@ -1,13 +1,15 @@
 package com.ahnis.servaia.chatbot.chatmemory.config;
 
 
-
 import com.ahnis.servaia.chatbot.chatmemory.custom.MongoDbChatMemory;
 import com.ahnis.servaia.chatbot.chatmemory.custom.MongoDbChatMemoryConfig;
 import com.mongodb.client.MongoClient;
 import org.springframework.ai.chat.memory.ChatMemory;
+import org.springframework.ai.chat.memory.cassandra.CassandraChatMemory;
+import org.springframework.ai.chat.memory.cassandra.CassandraChatMemoryConfig;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 
 import java.time.Duration;
 
@@ -39,14 +41,17 @@ public class ChatMemoryConfig {
      * @param mongoClient The MongoDB client used to connect to the database.
      * @return A configured {@link ChatMemory} instance.
      */
-    @Bean
-    public ChatMemory chatMemory(MongoClient mongoClient) {
-        return MongoDbChatMemory.create(MongoDbChatMemoryConfig.builder()
-                .withMongoClient(mongoClient)
-                .withCollectionName("chat_memory")
-                .withDatabaseName("journal_ai")
-                .withTimeToLive(Duration.ofDays(90))
-                .build()
-        );
-    }
+//    @Bean
+//
+//    public ChatMemory chatMemory(MongoClient mongoClient) {
+//        return MongoDbChatMemory.create(MongoDbChatMemoryConfig.builder()
+//                .withMongoClient(mongoClient)
+//                .withCollectionName("chat_memory")
+//                .withDatabaseName("journal_ai")
+//                .withTimeToLive(Duration.ofDays(90))
+//                .build()
+//        );
+//    }
+
+
 }

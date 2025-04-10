@@ -18,6 +18,29 @@ spring:
       uri: ${MONGO_ATLAS_URL_SERAVIA}
       auto-index-creation: true
       database: seravia_db
+
+  cassandra:
+    # Connection settings
+    contact-points: localhost
+    port: 9042
+    local-datacenter: datacenter1
+
+    # Authentication (matches Docker Compose)
+    username: cassandra
+    password: cassandra
+
+    # Keyspace configuration
+    keyspace: spring_keyspace
+    schema-action: CREATE_IF_NOT_EXISTS
+
+    # Connection tuning
+    connection:
+      connect-timeout: 10s
+      init-query-timeout: 10s
+    request:
+      timeout: 10s
+      throttle-timeout: 1s
+
 email:
   sendgrid:
     config:
@@ -29,7 +52,7 @@ app:
   password-reset-url: "/api/v1/auth/reset-password"
 security:
   allowedOrigins:
-    - "http://localhost:63342"
+    - "http://10.10.195.61"
 
 management:
   endpoint:

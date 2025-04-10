@@ -1,0 +1,24 @@
+version: '3.8'
+
+services:
+  cassandra:
+    image: cassandra:5.0  # Recommended specific version
+    container_name: cassandra-container_seravia
+    ports:
+      - "9042:9042"
+    environment:
+      - CASSANDRA_CLUSTER_NAME=SpringCluster
+      - CASSANDRA_DC=datacenter1
+      - CASSANDRA_ENDPOINT_SNITCH=GossipingPropertyFileSnitch
+      - CASSANDRA_USER=cassandra  # Default superuser
+      - CASSANDRA_PASSWORD=cassandra  # Default password
+    volumes:
+      - cassandra-data:/var/lib/cassandra
+    healthcheck:
+      test: ["CMD-SHELL", "cqlsh -u cassandra -p cassandra -e 'describe keyspaces'"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  cassandra-data:

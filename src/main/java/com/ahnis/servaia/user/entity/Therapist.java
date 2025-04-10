@@ -10,6 +10,8 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.mongodb.core.index.CompoundIndex;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
+import org.springframework.data.mongodb.core.mapping.FieldType;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -57,7 +59,6 @@ public class Therapist implements UserDetails {
     private String profilePictureUrl;
 
     private Set<String> specialties = new HashSet<>();
-
     private Set<String> clientUserId = new HashSet<>();
     @CreatedDate
     private Instant createdAt;

@@ -6,11 +6,13 @@ import com.ahnis.servaia.user.dto.response.TherapistClientResponse;
 import com.ahnis.servaia.user.dto.response.TherapistPersonalResponse;
 import com.ahnis.servaia.user.dto.response.TherapistResponse;
 import com.ahnis.servaia.user.entity.Therapist;
+import com.ahnis.servaia.user.entity.User;
 import com.ahnis.servaia.user.exception.UserNotFoundException;
 import com.ahnis.servaia.user.repository.TherapistRepository;
 import com.ahnis.servaia.user.repository.UserRepository;
 import com.github.dockerjava.api.exception.ConflictException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -24,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.Instant;
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class TherapistService {
@@ -61,24 +64,25 @@ public class TherapistService {
     }
 
     @Transactional
-    public void subscribe(String userId, String therapistId) {
+    public void subscribe(User user, String therapistId) {
         var therapist = therapistRepository.findById(therapistId)
                 .orElseThrow(() -> new UserNotFoundException("Therapist not found" + therapistId));
-        var user = userRepository.findById(userId)
-                .orElseThrow(() -> new UserNotFoundException("User not found" + userId));
 
-        if (user.getTherapistId() != null) {
-            throw new ConflictException("Therapist is already subscribed");
-        }
+
+//        if (user.getTherapistId() != null) {
+//            throw new ConflictException("Therapist is already subscribed");
+//        }
 
         // Updating both sides of relationship ie one to many
+        log.info("Subscribing from service {}", therapistId);
         user.setTherapistId(therapistId);
         user.setSubscribedAt(Instant.now());
-        therapist.getClientUserId().add(userId);
+        therapist.getClientUserId().add(user.getId());
 
         //Todo refactor to atomic update
         userRepository.save(user);
         therapistRepository.save(therapist);
+        log.info("exiting subscribe user state : {}", user);
 
         //notificationService.sendSubscriptionNotification(therapist, user);
     }

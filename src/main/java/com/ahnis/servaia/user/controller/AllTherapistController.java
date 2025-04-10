@@ -4,6 +4,7 @@ import com.ahnis.servaia.user.dto.response.TherapistResponse;
 import com.ahnis.servaia.user.entity.User;
 import com.ahnis.servaia.user.service.TherapistService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 /// For users to view/search/interact with therapists
+@Slf4j
 @RestController
 @RequestMapping("/api/v1/therapists")
 @RequiredArgsConstructor
@@ -32,7 +34,7 @@ public class AllTherapistController {
             @RequestParam(required = false) String lastName
 
     ) {
-        return therapistService.search(specialty, firstName,lastName);
+        return therapistService.search(specialty, firstName, lastName);
     }
 
     @PostMapping("/{therapistId}/subscribe")
@@ -40,7 +42,8 @@ public class AllTherapistController {
             @PathVariable String therapistId,
             @AuthenticationPrincipal User user
     ) {
-        therapistService.subscribe(user.getId(), therapistId);
+        log.info("Therapist ko subscribe karne laga {} ", therapistId);
+        therapistService.subscribe(user, therapistId);
     }
 
 

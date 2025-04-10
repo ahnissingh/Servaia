@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Urgent: Suicide Risk Alert</title>
+</head>
+<body style="font-family: Arial, sans-serif; background-color: #f7f7f7; margin: 0; padding: 0;">
+
+<div class="container"
+     style="max-width: 600px; background-color: #ffffff; margin: 20px auto; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); overflow: hidden;">
+    <div class="header"
+         style="background-color: #d32f2f; color: white; padding: 20px; text-align: center; font-size: 24px; font-weight: bold;">
+        🚨 Urgent: Suicide Risk Alert
+    </div>
+
+    <div class="section" style="padding: 20px; border-bottom: 1px solid #eeeeee;">
+        <div class="content" style="font-size: 14px; color: #555555; line-height: 1.6;">
+            <p>Dear <span th:text="${therapistName}"></span>,</p>
+
+            <p>Your client <strong th:text="${userName}"></strong> has expressed concerning thoughts that may indicate suicide risk.</p>
+
+            <div style="background-color: #f8f8f8; border-left: 4px solid #d32f2f; padding: 12px; margin: 15px 0;">
+                <p style="font-style: italic; margin: 0;" th:text="${concerningMessage}"></p>
+            </div>
+
+            <p><strong>Recommended actions:</strong></p>
+            <ul style="padding-left: 20px; margin-top: 5px;">
+                <li>Contact the client immediately</li>
+                <li>Use crisis intervention techniques</li>
+                <li>Review safety plan if available</li>
+            </ul>
+
+            <div style="margin: 25px 0; text-align: center;">
+                <a th:href="${clientProfileUrl}"
+                   style="display: inline-block; padding: 12px 20px; background-color: #d32f2f; color: white; text-decoration: none; border-radius: 8px; font-weight: bold;">
+                    View Client Profile
+                </a>
+            </div>
+
+            <p style="font-size: 13px; color: #888;">
+                <strong>Timestamp:</strong> <span th:text="${#temporals.format(timestamp, 'MMM dd, yyyy hh:mm a')}"></span>
+            </p>
+        </div>
+    </div>
+
+    <div class="footer" style="padding: 15px; text-align: center; font-size: 12px; color: #888888;">
+        <p>This is an automated alert. If you believe this was sent in error, please contact our support team immediately.</p>
+        <p>Need help? Here are <a href="https://www.suicidestop.com/call_a_hotline.html" style="color: #6C63FF;">international crisis resources</a></p>
+    </div>
+</div>
+
+</body>
+</html>
