@@ -1,5 +1,6 @@
 package com.ahnis.servaia.user.service.impl;
 
+import com.ahnis.servaia.user.mapper.UserMapper;
 import com.ahnis.servaia.user.service.UserService;
 import com.ahnis.servaia.user.dto.request.PreferencesRequest;
 import com.ahnis.servaia.user.dto.request.UserUpdateRequest;
