@@ -47,7 +47,8 @@ public interface UserMapper {
     @Mapping(target = "lastJournalEntryDate", source = "lastJournalEntryDate")
     @Mapping(target = "firstName", source = "firstName")
     @Mapping(target = "lastName", source = "lastName")
-    @Mapping(target = "subscribedAt", source = "subscribedAt")//therapist subscribed at
+    //todo impl when get therapists
+//    @Mapping(target = "subscribedAt", source = "subscribedAt")//therapist subscribed at
     UserResponse toResponseDto(User user);
 
 

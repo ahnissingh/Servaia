@@ -75,6 +75,11 @@ public class User implements UserDetails {
     @Indexed
     private Instant lastReportAt;
 
+    //New properties as per discussion
+    private int currentStreak; // Current consecutive days of journal writing
+    private int longestStreak; // Longest streak achieved
+    private Instant lastJournalEntryDate; // Date of the last journal entry
+
     //For spring security
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
