@@ -3,6 +3,7 @@ package com.ahnis.servaia.service.impl;
 import com.ahnis.servaia.service.UserService;
 import com.ahnis.servaia.user.dto.request.PreferencesRequest;
 import com.ahnis.servaia.user.dto.request.UserUpdateRequest;
+import com.ahnis.servaia.user.dto.response.TherapistResponse;
 import com.ahnis.servaia.user.dto.response.UserResponse;
 import com.ahnis.servaia.user.entity.Preferences;
 import com.ahnis.servaia.user.entity.User;
@@ -37,6 +38,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Preferences getUserPreferencesByUsername(String username) {
+        return null;
+    }
+
+    @Override
+    public TherapistResponse getSubscribedTherapist(String username) {
         return null;
     }
 }
