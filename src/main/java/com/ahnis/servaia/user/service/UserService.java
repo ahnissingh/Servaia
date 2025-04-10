@@ -1,4 +1,4 @@
-package com.ahnis.servaia.service;
+package com.ahnis.servaia.user.service;
 
 import com.ahnis.servaia.user.dto.request.PreferencesRequest;
 import com.ahnis.servaia.user.dto.request.UserUpdateRequest;

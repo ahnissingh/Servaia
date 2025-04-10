@@ -1,16 +1,26 @@
-package com.ahnis.servaia.service.impl;
+package com.ahnis.servaia.user.service.impl;
 
-import com.ahnis.servaia.service.UserService;
+import com.ahnis.servaia.user.service.UserService;
 import com.ahnis.servaia.user.dto.request.PreferencesRequest;
 import com.ahnis.servaia.user.dto.request.UserUpdateRequest;
 import com.ahnis.servaia.user.dto.response.TherapistResponse;
 import com.ahnis.servaia.user.dto.response.UserResponse;
 import com.ahnis.servaia.user.entity.Preferences;
 import com.ahnis.servaia.user.entity.User;
+import com.ahnis.servaia.user.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 
+@Service
+@RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final UserMapper userMapper;
+
     @Override
     public UserResponse getUserResponseByUsername(String username) {
         return null;
