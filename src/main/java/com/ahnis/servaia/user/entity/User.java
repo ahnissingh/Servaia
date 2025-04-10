@@ -7,6 +7,8 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
+import org.springframework.data.mongodb.core.mapping.FieldType;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -79,7 +81,11 @@ public class User implements UserDetails {
     private int currentStreak; // Current consecutive days of journal writing
     private int longestStreak; // Longest streak achieved
     private Instant lastJournalEntryDate; // Date of the last journal entry
-
+    @Indexed
+    @Field(targetType = FieldType.OBJECT_ID)
+    private String therapistId;
+    private Instant subscribedAt; // Track when subscription occurred
+    //added these will only be viewed by therapists
     //For spring security
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

@@ -2,11 +2,14 @@ package com.ahnis.servaia.user.service.impl;
 
 import com.ahnis.servaia.common.security.JwtUtil;
 import com.ahnis.servaia.user.dto.request.AuthRequest;
+import com.ahnis.servaia.user.dto.request.TherapistRegistrationRequest;
 import com.ahnis.servaia.user.dto.request.UserRegistrationRequest;
 import com.ahnis.servaia.user.dto.response.AuthResponse;
+import com.ahnis.servaia.user.entity.Therapist;
 import com.ahnis.servaia.user.enums.Role;
 import com.ahnis.servaia.user.exception.UsernameOrEmailAlreadyExistsException;
 import com.ahnis.servaia.user.mapper.UserMapper;
+import com.ahnis.servaia.user.repository.TherapistRepository;
 import com.ahnis.servaia.user.repository.UserRepository;
 import com.ahnis.servaia.user.service.AuthService;
 import com.ahnis.servaia.user.util.UserUtils;
@@ -18,6 +21,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -37,6 +41,7 @@ public class AuthServiceImpl implements AuthService {
 
     private final UserMapper userMapper;
     private final UserRepository userRepository;
+    private final TherapistRepository therapistRepository;
 
     @Override
     public AuthResponse registerUser(UserRegistrationRequest registrationDTO) {
@@ -72,6 +77,30 @@ public class AuthServiceImpl implements AuthService {
         var user = (UserDetails) authentication.getPrincipal();
         log.info("User logged in {}", authRequest.usernameOrEmail());
         return buildAuthResponse(user);
+    }
+
+    @Override
+    @Transactional
+    public AuthResponse registerTherapist(TherapistRegistrationRequest request) {
+        if (therapistRepository.existsByUsernameOrEmail(request.username(), request.email()) ||
+                userRepository.existsByUsernameOrEmail(request.username(), request.email())
+        ) throw new UsernameOrEmailAlreadyExistsException(request.email());
+
+        var therapist = Therapist.builder()
+                .username(request.username())
+                .email(request.email())
+                .password(passwordEncoder.encode(request.password()))
+                .licenseNumber(request.licenseNumber())
+                .specialties(request.specialties())
+                .firstName(request.firstName())
+                .lastName(request.lastName())
+                .yearsOfExperience(request.yearsOfExperience())
+                .bio(request.bio())
+                .languages(request.spokenLanguages())
+                .profilePictureUrl(request.profilePictureUrl())
+                .build();
+        therapistRepository.save(therapist);
+        return buildAuthResponse(therapist);
     }
 
     private AuthResponse buildAuthResponse(UserDetails user) {
