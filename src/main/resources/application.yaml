@@ -18,7 +18,28 @@ spring:
       uri: ${MONGO_ATLAS_URL_SERAVIA}
       auto-index-creation: true
       database: seravia_db
+email:
+  sendgrid:
+    config:
+      apiKey: ${SENDGRID_API_KEY}
+      fromEmail: "ahnisaneja@gmail.com"
 
+app:
+  base-url: "http://localhost:8080"
+  password-reset-url: "/api/v1/auth/reset-password"
+security:
+  allowedOrigins:
+    - "http://localhost:63342"
+
+management:
+  endpoint:
+    health:
+      show-details: "always"  # Always show detailed health info (safe for internal use)
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+      base-path: "/monitor"  # Moves all Actuator endpoints under "/monitor"
 jwt:
   secret: ${JWT_SECRET_KEY}
   expiration: 86400000
@@ -38,3 +59,5 @@ admin:
       supportStyle: MINDFUL   # Enum value
       age: 22                    # Integer value
       gender: MALE               # Enum value
+server:
+  port: 8081

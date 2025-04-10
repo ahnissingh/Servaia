@@ -6,6 +6,8 @@ import com.ahnis.servaia.user.dto.request.UserUpdateRequest;
 import com.ahnis.servaia.user.dto.response.UserResponse;
 import com.ahnis.servaia.user.service.AdminService;
 
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -17,13 +19,10 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/admin")
+@RequiredArgsConstructor
 public class AdminController {
 
     private final AdminService adminService;
-
-    public AdminController(AdminService adminService) {
-        this.adminService = adminService;
-    }
 
     @GetMapping("/users")
     public ResponseEntity<ApiResponse<Page<UserResponse>>> getAllUsers(
@@ -72,7 +71,7 @@ public class AdminController {
 
     @PostMapping("/users/bulk")
     public ResponseEntity<ApiResponse<Void>> registerMultipleUsers(
-            @RequestBody List<UserRegistrationRequest> registrationRequests) {
+            @Valid @RequestBody List<UserRegistrationRequest> registrationRequests) {
         adminService.registerMultipleUsers(registrationRequests);
         return ResponseEntity.ok(ApiResponse.success(HttpStatus.CREATED, "Users created successfully", null));
     }
