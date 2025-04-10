@@ -1,7 +1,12 @@
 package com.ahnis.servaia.analysis.scheduler;
 
+import com.ahnis.servaia.analysis.dto.MoodReportEmailResponse;
+import com.ahnis.servaia.analysis.mapper.ReportMapper;
 import com.ahnis.servaia.analysis.service.ReportService;
+import com.ahnis.servaia.notification.service.NotificationService;
 import com.ahnis.servaia.user.entity.User;
+import com.ahnis.servaia.user.exception.UserNotFoundException;
+import com.ahnis.servaia.user.repository.TherapistRepository;
 import com.ahnis.servaia.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,6 +27,9 @@ import static com.ahnis.servaia.user.util.UserUtils.calculateNextReportOn;
 public class ReportScheduler {
     private final UserRepository userRepository;
     private final ReportService reportService;
+    private final TherapistRepository therapistRepository;
+    private final NotificationService notificationService;
+    private final ReportMapper reportMapper;
 
     //todo next asap PROFILING dev and prod
     //todo in prod and dev have cron expression in yaml
@@ -57,7 +65,16 @@ public class ReportScheduler {
                 //EDGE CASES
                 //Existing user with last report generated
                 var startDate = (lastReportAt != null) ? lastReportAt : user.getCreatedAt();
-                reportService.generateReport(user, startDate, nextReportOn);
+                //Join virtual thread to main
+                MoodReportEmailResponse report = reportService
+                        .getGeneratedReport(user, startDate, nextReportOn).join();
+
+                if (user.getTherapistId() != null) {
+                    var therapist = therapistRepository.findById(user.getTherapistId())
+                            .orElseThrow(() -> new UserNotFoundException("User not found" + user.getTherapistId()));
+                    notificationService.sendEmailReport(therapist.getEmail(), report);
+                } else notificationService.sendEmailReport(user.getEmail(), report);
+//                    reportService.generateReport(user, startDate, nextReportOn);
                 log.info("Report generated and dates updated for user: {}", user.getUsername());
                 //update last reportAt to today(nextReportOn)
                 userRepository.updateLastReportAtById(user.getId(), nextReportOn);
