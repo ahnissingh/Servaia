@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Mood Report</title>
+</head>
+<body style="font-family: Arial, sans-serif; background-color: #f7f7f7; margin: 0; padding: 0;">
+
+<div class="container"
+     style="max-width: 600px; background-color: #ffffff; margin: 20px auto; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); overflow: hidden;">
+    <div class="header"
+         style="background-color: #6C63FF; color: white; padding: 20px; text-align: center; font-size: 24px; font-weight: bold;">
+        ✨ Your Mood Report ✨
+    </div>
+
+    <!-- Mood Summary -->
+    <div class="section" style="padding: 20px; border-bottom: 1px solid #eeeeee;">
+        <div class="title" style="font-size: 18px; font-weight: bold; margin-bottom: 10px; color: #6C63FF;">📝 Mood
+            Summary
+        </div>
+        <div class="content" style="font-size: 14px; color: #555555; line-height: 1.6;"
+             th:text="${report.moodSummary}">Feeling a bit anxious but hopeful
+        </div>
+    </div>
+
+    <!-- Key Emotions -->
+    <div class="section" style="padding: 20px; border-bottom: 1px solid #eeeeee;">
+        <div class="title" style="font-size: 18px; font-weight: bold; margin-bottom: 10px; color: #6C63FF;">😶‍🌫️ Key
+            Emotions
+        </div>
+        <div class="content" style="font-size: 14px; color: #555555; line-height: 1.6;">
+            <span th:each="emotion : ${report.keyEmotions}"
+                  class="badge"
+                  style="display: inline-block; padding: 5px 10px; margin: 4px 2px; background-color: #e8e8ff; color: #6C63FF; border-radius: 20px; font-size: 12px; font-weight: bold;"
+                  th:text="${emotion.key + ': ' + emotion.value}"></span>
+        </div>
+    </div>
+
+    <!-- Contextual Insights -->
+    <div class="section" style="padding: 20px; border-bottom: 1px solid #eeeeee;">
+        <div class="title" style="font-size: 18px; font-weight: bold; margin-bottom: 10px; color: #6C63FF;">💡 Contextual
+            Insights
+        </div>
+        <div class="content" style="font-size: 14px; color: #555555; line-height: 1.6;">
+            <ul style="padding-left: 20px; margin: 0;">
+                <li th:each="insight : ${report.insights}"
+                    style="margin: 5px 0;"
+                    th:text="${insight}"></li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Recommendations -->
+    <div class="section" style="padding: 20px;">
+        <div class="title" style="font-size: 18px; font-weight: bold; margin-bottom: 10px; color: #6C63FF;">✅
+            Recommendations
+        </div>
+        <div class="content" style="font-size: 14px; color: #555555; line-height: 1.6;">
+            <ul style="padding-left: 20px; margin: 0;">
+                <li th:each="recommendation : ${report.recommendations}"
+                    style="margin: 5px 0;"
+                    th:text="${recommendation}"></li>
+            </ul>
+        </div>
+    </div>
+    <!-- Literature Quote -->
+    <div class="section" style="padding: 20px; border-top: 1px solid #eeeeee;">
+        <div class="title" style="font-size: 18px; font-weight: bold; margin-bottom: 10px; color: #6C63FF;">📖 Reflective
+            Quote
+        </div>
+        <div class="content" style="font-size: 14px; color: #555555; line-height: 1.6; font-style: italic;"
+             th:text="${report.quote}">
+        </div>
+    </div>
+
+
+</div>
+
+</body>
+</html>

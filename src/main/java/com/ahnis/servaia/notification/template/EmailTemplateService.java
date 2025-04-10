@@ -1,6 +1,7 @@
 package com.ahnis.servaia.notification.template;
 
 
+import com.ahnis.servaia.analysis.dto.MoodReportEmailResponse;
 import com.ahnis.servaia.common.config.AppProperties;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,12 +15,12 @@ import org.thymeleaf.spring6.SpringTemplateEngine;
 public class EmailTemplateService {
     private final SpringTemplateEngine templateEngine;
     private final AppProperties appProperties;
-//
-//    public String generateMoodReportEmail(MoodReportEmailResponse report) {
-//        var context = new Context();
-//        context.setVariable("report", report);
-//        return templateEngine.process("email/mood-report-email", context);
-//    }
+
+    public String generateMoodReportEmail(MoodReportEmailResponse report) {
+        var context = new Context();
+        context.setVariable("report", report);
+        return templateEngine.process("email/mood-report-email", context);
+    }
 
     public String generatePasswordResetEmail(String token) {
         var context = new Context();
@@ -33,22 +34,24 @@ public class EmailTemplateService {
         return templateEngine.process("email/password-reset-email", context);
 
     }
-    //
-//    public String generateJournalReminderEmail() {
-//        var context = new Context();
-//        var journalUrl = appProperties.getBaseUrl() + "/journal";
-//        context.setVariable("journalUrl", journalUrl);
-//        return templateEngine.process("email/journal-reminder-email", context);
-//    }
-//
-//    public String generateMilestoneNotificationEmail(String userName, int streak) {
-//        var context = new Context();
-//        var journalUrl = appProperties.getBaseUrl() + "/journal";
-//        context.setVariable("userName", userName);
-//        context.setVariable("streak", streak);
-//        context.setVariable("journalUrl", journalUrl);
-//        return templateEngine.process("email/milestone-notification-email", context);
-//    }
+
+    public String generateMilestoneNotificationEmail(String userName, int streak) {
+        var context = new Context();
+        var journalUrl = appProperties.getBaseUrl() + "/journal";
+        context.setVariable("userName", userName);
+        context.setVariable("streak", streak);
+        context.setVariable("journalUrl", journalUrl);
+        return templateEngine.process("email/milestone-notification-email", context);
+    }
+
+    public String generateJournalReminderEmail() {
+        var context = new Context();
+        var journalUrl = appProperties.getBaseUrl() + "/journal";
+        context.setVariable("journalUrl", journalUrl);
+        return templateEngine.process("email/journal-reminder-email", context);
+    }
+
+
 
 }
 

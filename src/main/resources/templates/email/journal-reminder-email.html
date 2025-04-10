@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Journal Reminder</title>
+</head>
+<body style="font-family: Arial, sans-serif; background-color: #f7f7f7; margin: 0; padding: 0;">
+
+<div class="container"
+     style="max-width: 600px; background-color: #ffffff; margin: 20px auto; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); overflow: hidden;">
+    <div class="header"
+         style="background-color: #6C63FF; color: white; padding: 20px; text-align: center; font-size: 24px; font-weight: bold;">
+        📔 Journal Reminder
+    </div>
+
+    <div class="section" style="padding: 20px; border-bottom: 1px solid #eeeeee;">
+        <div class="content" style="font-size: 14px; color: #555555; line-height: 1.6;">
+            <p>Hi there,</p>
+            <p>It's time to reflect on your day and write your journal entry! Journaling helps you track your emotions, thoughts, and progress.</p>
+            <div style="text-align: center; margin: 20px 0;">
+                <a th:href="${journalUrl}"
+                   style="display: inline-block; padding: 12px 20px; background-color: #6C63FF; color: white; text-decoration: none; border-radius: 8px; font-weight: bold;">
+                    Write Journal Now
+                </a>
+            </div>
+            <p>Or copy and paste the link below into your browser:</p>
+            <p style="word-wrap: break-word; color: #6C63FF; font-weight: bold;" th:text="${journalUrl}"></p>
+            <p>Make journaling a daily habit to unlock your full potential!</p>
+        </div>
+    </div>
+
+    <div class="footer" style="padding: 15px; text-align: center; font-size: 12px; color: #888888;">
+        If you have any questions, feel free to reach out to our support team.
+    </div>
+</div>
+
+</body>
+</html>

@@ -61,3 +61,28 @@ admin:
       gender: MALE               # Enum value
 server:
   port: 8081
+
+milvus:
+  cloud:
+    uri: ${MILVUS_CLOUD_URI}
+    token: ${MILVUS_CLOUD_TOKEN}
+    username: ${MILVUS_CLOUD_USERNAME}
+    password: ${MILVUS_CLOUD_PASSWORD}
+
+vector:
+  batching:
+    enabled: false
+  store:
+    database-name: ${VECTOR_STORE_DATABASE_NAME:default}
+    collection-name: ${VECTOR_STORE_COLLECTION_NAME:vector_store1}
+    metric-type: ${VECTOR_STORE_METRIC_TYPE:COSINE}
+    index-type: ${VECTOR_STORE_INDEX_TYPE:IVF_FLAT}
+    embedding-dimension: ${VECTOR_STORE_EMBEDDING_DIMENSION:1536}
+    initialize-schema: ${VECTOR_STORE_INITIALIZE_SCHEMA:true}
+scheduler:
+  remind-users:
+    cron: "0 56 19 * * ?"   # 7:52 PM IST
+    zone: "Asia/Kolkata"
+  check-reports:
+    cron: "0 56 19 * * ?"   # 7:20 PM IST
+    zone: "Asia/Kolkata"

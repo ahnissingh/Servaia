@@ -1,6 +1,7 @@
 package com.ahnis.servaia.user.controller;
 
 import com.ahnis.servaia.user.dto.request.AuthRequest;
+import com.ahnis.servaia.user.dto.request.TherapistRegistrationRequest;
 import com.ahnis.servaia.user.dto.request.UserRegistrationRequest;
 import com.ahnis.servaia.user.dto.response.AuthResponse;
 import com.ahnis.servaia.user.service.AuthService;
@@ -36,6 +37,10 @@ public class AuthController {
                 .status(HttpStatus.CREATED)
                 .body(registeredUserAuthResponse);
     }
+    @PostMapping("/register/therapist")
+    public AuthResponse registerTherapist(@Valid @RequestBody TherapistRegistrationRequest request) {
+        return authService.registerTherapist(request);
+    }
 
     //todo
     @PostMapping("/forgot-password")
@@ -43,6 +48,8 @@ public class AuthController {
         passwordResetService.sendPasswordResetEmail(email);
         return "Password reset email sent.";
     }
+
+
 
     @PostMapping("/reset-password")
     public String resetPassword(

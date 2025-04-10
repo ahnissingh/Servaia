@@ -34,16 +34,18 @@ public class TherapistService {
 
     public List<TherapistResponse> search(
             String specialty,
-            String username
+            String firstName,
+            String lastName
     ) {
         var criteria = new Criteria();
         if (specialty != null)
             criteria.and("specialties").regex(specialty, "i");
         //todo remove and replace with first name and last name
-        if (username != null)
-            criteria.and("username").regex(username, "i");
+        if (firstName != null)
+            criteria.and("firstName").regex(firstName, "i");
+        if (lastName != null)
+            criteria.and("firstName").regex(lastName, "i");
         var query = Query.query(criteria);
-
         List<Therapist> therapists = mongoTemplate.find(query, Therapist.class);
         return therapists.stream()
                 .map(this::mapToResponse)
@@ -99,13 +101,13 @@ public class TherapistService {
     public TherapistPersonalResponse getProfile(String id) {
         return therapistRepository.findById(id)
                 .map(TherapistPersonalResponse::fromEntity)
-                .orElseThrow(() -> new UserNotFoundException("Therapist not found"+ id));
+                .orElseThrow(() -> new UserNotFoundException("Therapist not found" + id));
     }
 
     @Transactional
     public void updateProfile(String therapistId, TherapistUpdateRequest request) {
         Therapist therapist = therapistRepository.findById(therapistId)
-                .orElseThrow(() -> new UserNotFoundException("Therapist not found"+ therapistId));
+                .orElseThrow(() -> new UserNotFoundException("Therapist not found" + therapistId));
 
         therapist.setBio(request.bio());
         therapist.setSpecialties(request.specialties());
@@ -118,7 +120,7 @@ public class TherapistService {
 
     public List<TherapistClientResponse> getClients(String therapistId) {
         Therapist therapist = therapistRepository.findById(therapistId)
-                .orElseThrow(() -> new UserNotFoundException("Therapist not found"+therapistId));
+                .orElseThrow(() -> new UserNotFoundException("Therapist not found" + therapistId));
 
         return userRepository.findAllById(therapist.getClientUserId()).stream()
                 .map(TherapistClientResponse::fromUser)

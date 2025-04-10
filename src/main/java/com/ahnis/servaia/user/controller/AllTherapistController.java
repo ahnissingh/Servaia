@@ -28,9 +28,11 @@ public class AllTherapistController {
     @GetMapping("/search")
     public List<TherapistResponse> searchTherapists(
             @RequestParam(required = false) String specialty,
-            @RequestParam(required = false) String username
+            @RequestParam(required = false) String firstName,
+            @RequestParam(required = false) String lastName
+
     ) {
-        return therapistService.search(specialty, username);
+        return therapistService.search(specialty, firstName,lastName);
     }
 
     @PostMapping("/{therapistId}/subscribe")
