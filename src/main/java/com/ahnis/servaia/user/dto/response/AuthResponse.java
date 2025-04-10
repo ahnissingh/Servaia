@@ -1,4 +1,6 @@
 package com.ahnis.servaia.user.dto.response;
 
-public record AuthResponse() {
+public record AuthResponse(
+        String token
+) {
 }
