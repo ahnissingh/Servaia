@@ -12,6 +12,7 @@ import com.ahnis.servaia.user.entity.User;
 import com.ahnis.servaia.user.repository.UserRepository;
 import com.ahnis.servaia.user.util.UserUtils;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -20,6 +21,7 @@ import java.time.Instant;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
@@ -57,22 +59,34 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void updateUserPreferences(String username, PreferencesRequest preferencesRequest) {
+        var currentUser = getUserByUsername(username);
+        if (!preferencesRequest.reportFrequency().equals(currentUser.getPreferences().getReportFrequency())) {
+            var nextReportOn = UserUtils.calculateNextReportOn(Instant.now(), preferencesRequest.reportFrequency());
 
+            userRepository.updateNextReportOnByUsername(username, nextReportOn);
+        }
+        userRepository.updatePreferencesByUsername(username, userMapper.toPreferencesEntity(preferencesRequest));
     }
 
     @Override
     public void deleteUserByUsername(String username) {
-
+        long deletedCount = userRepository.deleteByUsername(username);
+        if (deletedCount == 0) throw new UsernameNotFoundException("Username not found , User not deleted");
     }
 
     @Override
     public void updateUserReportDates(User user, Instant nextReportOn, Instant newNextReportOn) {
-
+        userRepository.updateLastReportAtById(user.getId(), nextReportOn);
+        userRepository.updateNextReportOnById(user.getId(), newNextReportOn);
+        log.info("LastReportAt and NextReportOn fields updated for user: {}", user.getUsername());
     }
 
     @Override
+    //todo change to native query (not good practice below, for time )
     public Preferences getUserPreferencesByUsername(String username) {
-        return null;
+        return userRepository.findByUsername(username)
+                .map(User::getPreferences)
+                .orElseThrow(() -> new UsernameNotFoundException("Username not found " + username));
     }
 
     //todo impl when therapists
@@ -85,6 +99,7 @@ public class UserServiceImpl implements UserService {
         return userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
     }
+
     private void validateEmail(String email) {
         if (userRepository.existsByEmail(email))
             throw new EmailAlreadyExistsException(email);
