@@ -22,3 +22,19 @@ spring:
 jwt:
   secret: ${JWT_SECRET_KEY}
   expiration: 86400000
+admin:
+  bootstrap:
+    enabled: ${ADMIN_BOOTSTRAP_ENABLED:false}   # Default off for safety (dev only)
+    resource: ${ADMIN_BOOTSTRAP_RESOURCE:classpath:/bootstrap/users.json}  # Default to classpath, can point to file:// or even http:// if needed (super flexible)
+  user:
+    enabled: ${ADMIN_ENABLED:true}  # Default false for safety
+    username: ${ADMIN_USERNAME:admin}
+    email: ${ADMIN_EMAIL:admin@example.com}
+    password: ${ADMIN_PASSWORD:admin123}  # Set via env var in production
+    preferences:
+      reportFrequency: BIWEEKLY  # Enum value
+      language: ENGLISH          # Enum value
+      themePreference: DARK      # Enum value
+      supportStyle: MINDFUL   # Enum value
+      age: 22                    # Integer value
+      gender: MALE               # Enum value
