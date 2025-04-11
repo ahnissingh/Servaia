@@ -18,7 +18,7 @@ import java.util.Map;
 public class JournalEmbeddingService {
     private final VectorStore vectorStore;
 
-    @Async
+//    @Async
     public void saveJournalEmbeddings(Journal journal) {
 
         try {

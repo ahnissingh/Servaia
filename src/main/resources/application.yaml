@@ -12,7 +12,7 @@ spring:
           model: text-embedding-3-small
       chat:
         options:
-          model: gpt-4-turbo #todo use 4o instead of this and o4-mini se chain banani
+          model: gpt-4 #todo use 4o instead of this and o4-mini se chain banani
   data:
     mongodb:
       uri: ${MONGO_ATLAS_URL_SERAVIA}
@@ -48,11 +48,11 @@ email:
       fromEmail: "ahnisaneja@gmail.com"
 
 app:
-  base-url: "http://localhost:8080"
-  password-reset-url: "/api/v1/auth/reset-password"
+  base-url: "http://localhost:5173"
+  password-reset-url: "/reset-password"
 security:
   allowedOrigins:
-    - "http://10.10.195.61"
+    - "http://localhost:5173"
 
 management:
   endpoint:
