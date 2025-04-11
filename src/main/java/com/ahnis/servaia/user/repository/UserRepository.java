@@ -2,6 +2,7 @@ package com.ahnis.servaia.user.repository;
 
 import com.ahnis.servaia.user.entity.Preferences;
 import com.ahnis.servaia.user.entity.User;
+import com.ahnis.servaia.user.repository.projections.TherapistIdProjection;
 import org.springframework.data.mongodb.repository.DeleteQuery;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
@@ -13,6 +14,10 @@ import java.util.List;
 import java.util.Optional;
 
 public interface UserRepository extends MongoRepository<User, String> {
+
+    @Query(value = "{'username' : ?0}", fields = "{'therapistId' : 1}")
+    Optional<TherapistIdProjection> findTherapistIdByUsername(String username);
+
     @Query("{ '$or' : [ { 'username' : ?0 }, { 'email' : ?0 } ] }")
     Optional<User> findByUsernameOrEmail(String identifier);
 

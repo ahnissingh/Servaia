@@ -2,9 +2,9 @@ package com.ahnis.servaia.chatbot.tools;
 
 import com.ahnis.servaia.notification.service.NotificationService;
 import com.ahnis.servaia.user.entity.User;
-import com.ahnis.servaia.user.exception.UserNotFoundException;
 import com.ahnis.servaia.user.repository.TherapistRepository;
 import com.ahnis.servaia.user.repository.UserRepository;
+import com.ahnis.servaia.user.repository.projections.TherapistIdProjection;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.prompt.ChatOptions;
@@ -14,7 +14,6 @@ import org.springframework.ai.converter.BeanOutputConverter;
 import org.springframework.ai.tool.annotation.Tool;
 import org.springframework.ai.tool.annotation.ToolParam;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
@@ -24,14 +23,12 @@ import java.util.Map;
 public class ChatbotToolChain {
 
     private final ChatClient chatClient;
-    private final TherapistRepository therapistRepository;
     private final NotificationService notificationService;
     private final UserRepository userRepository;
 
     public ChatbotToolChain(ChatClient.Builder chatClient, TherapistRepository therapistRepository, NotificationService notificationService, UserRepository userRepository) {
         this.chatClient = chatClient.defaultOptions(ChatOptions.builder()
                 .model("gpt-4o-mini").build()).build();
-        this.therapistRepository = therapistRepository;
         this.notificationService = notificationService;
         this.userRepository = userRepository;
     }
@@ -43,24 +40,27 @@ public class ChatbotToolChain {
     public String handlePotentialSuicideRisk(
             @ToolParam() String userMessage,
             @AuthenticationPrincipal User user) {
-
+        log.info("user in chain {} ", user);
         SuicideDetectionResult result = detectRisk(userMessage);
         log.info("Chain Result {}", result);
         if (!result.suicidalTendenciesDetected()) {
             return "I'm here to support you. Would you like to talk more about how you're feeling?";
         }
+        //Fixed issue by spring data projections
+        String therapistId = userRepository.findTherapistIdByUsername(user.getUsername())
+                .map(TherapistIdProjection::getTherapistId)
+                .orElseThrow(() -> new IllegalStateException("No therapist assigned"));
         log.info("User therapist when tool call {} ", user.getTherapistId());
-
         try {
             log.info(user.getUsername());
-            notificationService.sendSuicidalAlert(user.getUsername(), user.getTherapistId(), "Sample concerning Concern");
+            notificationService.sendSuicidalAlert(user.getUsername(), therapistId,
+                    "User shared thoughts that raised concern about their safety");
             return "I'm very concerned about what you're sharing. Your therapist has been notified and will reach out to you shortly.";
         } catch (Exception e) {
             log.error("Failed to process suicide risk alert", e);
             return "I'm very concerned about what you're sharing. Please stay safe while we look into connecting you with support.";
         }
     }
-
     private SuicideDetectionResult detectRisk(String userMessage) {
         BeanOutputConverter<SuicideDetectionResult> outputConverter =
                 new BeanOutputConverter<>(SuicideDetectionResult.class);
@@ -76,7 +76,6 @@ public class ChatbotToolChain {
                 Message: {message}
                 Format: {format}
                 """;
-
         Prompt prompt = new PromptTemplate(promptTemplate)
                 .create(Map.of(
                         "message", userMessage,
